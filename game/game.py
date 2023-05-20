@@ -18,11 +18,12 @@ def show_rock(x,y):
 #obstacles
 obstacle=pygame.image.load('images/spike.png')
 obstacle_bottom=pygame.transform.flip(obstacle, False, True)
-obstacle_gap=100
-obstacle_y_bottom=random.randrange(150,651)
-obstacle_y_top=(-1*(750+obstacle_gap)+(obstacle_y_bottom))
-def show_obstacle(height):
-    screen.blit(obstacle)
+obstacle_gap=120
+obstacle_y=random.randrange(150,651)
+obstacle_x=500
+def show_obstacle(x,y):
+    screen.blit(obstacle, (250,(-1*(750+obstacle_gap)+(obstacle_y))))
+    screen.blit(obstacle_bottom, (250, obstacle_y))
 #background
 bg= pygame.image.load('images/background.png')
 #when the game starts
@@ -61,7 +62,6 @@ while running:
     elif rock_y >= 700:
         rock_y=700
     show_rock(rock_x, rock_y)
-    screen.blit(obstacle, (250,obstacle_y_top))
-    screen.blit(obstacle_bottom, (250, obstacle_y_bottom))
+    show_obstacle(obstacle_x, obstacle_y)
     pygame.display.update()
 pygame.quit()
