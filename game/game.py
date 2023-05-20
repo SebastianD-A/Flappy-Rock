@@ -29,7 +29,7 @@ bg= pygame.image.load('images/background.png')
 #when the game starts
 while running:
     clock.tick(fps)
-    pygame.display.set_caption("Flappy Dwayne")
+    pygame.display.set_caption("Flappy Dwayne 🗿")
     screen.blit(bg, (0,0))
     while waiting:
         for event in pygame.event.get():
@@ -44,7 +44,7 @@ while running:
                     waiting=False
         show_rock(rock_x, rock_y)
         pygame.display.update()
-    y_change+=0.7
+    y_change+=0.65
     for event in pygame.event.get():
         if event.type==pygame.QUIT:
             running=False
