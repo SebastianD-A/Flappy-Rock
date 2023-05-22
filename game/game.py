@@ -7,6 +7,8 @@ screen=pygame.display.set_mode(res)
 running=True
 fps=60
 waiting=True
+score=0
+pass_obstacle=False
 clock=pygame.time.Clock()
 #rock
 class Rock(pygame.sprite.Sprite):
@@ -22,8 +24,25 @@ class Rock(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = [x, y]
         self.velocity = int(0)
+        self.is_clicked= False
     def update(self):
-        self.velocity+=0.65
+        #physics
+        #gravity
+        if waiting==False:
+            self.velocity+=1.5
+            if self.velocity>15:
+                self.velocity=15
+            if self.rect.top<5:
+                self.rect.top=10
+            if self.rect.bottom>700:
+                self.rect.bottom=699
+            self.rect.y+=self.velocity
+            #controls
+            if pygame.key.get_pressed()[pygame.K_SPACE]:
+                pygame.mixer.music.load('sound/rock_flap.mp3')
+                pygame.mixer.music.play()
+                self.velocity=-10
+        #animation
         self.counter+=1
         cooldown=4
         if self.counter>cooldown:
@@ -47,15 +66,16 @@ class Obstacle(pygame.sprite.Sprite):
         self.rect=self.image.get_rect()
         if position==1:
             self.image=pygame.transform.flip(self.image , False, True)
-            self.rect.topleft=[x,y]
+            self.rect.bottomleft=[x,y-int(obstacle_gap)/2]
         elif position==-1:
-            self.rect.topleft=[x,y]
+            self.rect.topleft=[x,y+int(obstacle_gap)/2]
     def update(self):
-        self.rect.x-=3
-        if self.rect.x<-40:
-            self.kill() #kys <3
+        if waiting==False:
+            self.rect.x-=4
+            if self.rect.x<-40:
+                self.kill() #kys <3
 obstacle_group=pygame.sprite.Group()
-obstacle_gap=75
+obstacle_gap=250
 starting_position_obstacle_x=500
 obstacle_frequency=1500 #miliseconds
 last_tick=pygame.time.get_ticks()-obstacle_frequency
@@ -66,24 +86,22 @@ while running:
     clock.tick(fps)
     pygame.display.set_caption("Flappy Dwayne 🗿")
     screen.blit(bg, (0,0))
-    y_change+=0.65
-    for event in pygame.event.get():
-        if event.type==pygame.QUIT:
-            running=False
-    rock_y+=y_change
+    if pygame.sprite.groupcollide(rock_group, obstacle_group, False, False):
+        break
     rock_show=Rock(rock_x, rock_y)
-    if rock_y <=0:
-        rock_y=0
-    elif rock_y >= 700:
-        rock_y=700
     present_time=pygame.time.get_ticks()
     if present_time-last_tick>obstacle_frequency:
         obstacle_y_top=random.randrange(190,651) 
         obstacle_bottom=Obstacle(starting_position_obstacle_x, obstacle_y_top, 1 )
-        obstacle_top=Obstacle(starting_position_obstacle_x, (-750-obstacle_gap)+(obstacle_y_top), -1)
+        obstacle_top=Obstacle(starting_position_obstacle_x, obstacle_y_top, -1)
         obstacle_group.add(obstacle_bottom)
         obstacle_group.add(obstacle_top)
         last_tick=present_time
+    for event in pygame.event.get():
+        if event.type==pygame.QUIT:
+            running=False
+        if event.type==pygame.KEYDOWN:
+            waiting=False
     rock_group.draw(screen)
     rock_group.update()
     obstacle_group.draw(screen)
