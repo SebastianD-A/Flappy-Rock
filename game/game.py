@@ -86,6 +86,10 @@ while running:
     clock.tick(fps)
     pygame.display.set_caption("Flappy Dwayne 🗿")
     screen.blit(bg, (0,0))
+    rock_group.draw(screen)
+    rock_group.update()
+    obstacle_group.draw(screen)
+    obstacle_group.update()
     if pygame.sprite.groupcollide(rock_group, obstacle_group, False, False):
         break
     rock_show=Rock(rock_x, rock_y)
@@ -102,9 +106,5 @@ while running:
             running=False
         if event.type==pygame.KEYDOWN:
             waiting=False
-    rock_group.draw(screen)
-    rock_group.update()
-    obstacle_group.draw(screen)
-    obstacle_group.update()
     pygame.display.update()
 pygame.quit()
