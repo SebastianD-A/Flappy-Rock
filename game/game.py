@@ -8,14 +8,37 @@ running=True
 fps=60
 waiting=True
 clock=pygame.time.Clock()
-last_tick=pygame.time.get_ticks()
 #rock
+class Rock(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.images = []
+        self.index = 0
+        self.counter = 0
+        for num in range(1, 4):
+            img = pygame.image.load(f'images/rock{num}.png')
+            self.images.append(img)
+        self.image = self.images[self.index]
+        self.rect = self.image.get_rect()
+        self.rect.center = [x, y]
+        self.velocity = int(0)
+    def update(self):
+        self.velocity+=0.65
+        self.counter+=1
+        cooldown=4
+        if self.counter>cooldown:
+            self.counter=0
+            self.index+=1
+            if self.index >= len(self.images):
+                self.index=0
+            self.image=self.images[self.index]
+rock_group=pygame.sprite.Group()
 rock=pygame.image.load('images/rock1.png')
 rock_x=50
 rock_y=325
+rock_show=Rock(rock_x, rock_y)
+rock_group.add(rock_show)
 y_change=0
-def show_rock(x,y):
-    screen.blit(rock,(x, y))
 #obstacles
 class Obstacle(pygame.sprite.Sprite):
     def __init__(self, x, y, position):
@@ -29,10 +52,13 @@ class Obstacle(pygame.sprite.Sprite):
             self.rect.topleft=[x,y]
     def update(self):
         self.rect.x-=3
+        if self.rect.x<-40:
+            self.kill() #kys <3
 obstacle_group=pygame.sprite.Group()
 obstacle_gap=75
 starting_position_obstacle_x=500
 obstacle_frequency=1500 #miliseconds
+last_tick=pygame.time.get_ticks()-obstacle_frequency
 #background
 bg= pygame.image.load('images/background.png')
 #when the game starts
@@ -40,36 +66,12 @@ while running:
     clock.tick(fps)
     pygame.display.set_caption("Flappy Dwayne 🗿")
     screen.blit(bg, (0,0))
-    while waiting:
-        for event in pygame.event.get():
-            if event.type==pygame.QUIT:
-                running=False
-                waiting=False
-            if event.type==pygame.KEYDOWN:
-                if event.key==pygame.K_SPACE:
-                    y_change=-9
-                    pygame.mixer.music.load("sound/rock_flap.mp3")
-                    pygame.mixer.music.play()
-                    rock= pygame.image.load('images/rock2.png')
-                    rock=pygame.image.load('images/rock3.png')
-                    waiting=False
-        show_rock(rock_x, rock_y)
-        pygame.display.update()
     y_change+=0.65
     for event in pygame.event.get():
         if event.type==pygame.QUIT:
             running=False
-        if event.type==pygame.KEYDOWN:
-            if event.key==pygame.K_SPACE:
-                y_change=-9
-                rock= pygame.image.load('images/rock2.png')
-                rock=pygame.image.load('images/rock3.png')
-                pygame.mixer.music.load("sound/rock_flap.mp3")
-                pygame.mixer.music.play()
-        if event.type==pygame.KEYUP:
-            if event.key==pygame.K_SPACE:
-                rock=pygame.image.load('images/rock1.png')
     rock_y+=y_change
+    rock_show=Rock(rock_x, rock_y)
     if rock_y <=0:
         rock_y=0
     elif rock_y >= 700:
@@ -82,9 +84,9 @@ while running:
         obstacle_group.add(obstacle_bottom)
         obstacle_group.add(obstacle_top)
         last_tick=present_time
-
+    rock_group.draw(screen)
+    rock_group.update()
     obstacle_group.draw(screen)
     obstacle_group.update()
-    show_rock(rock_x, rock_y)
     pygame.display.update()
 pygame.quit()
