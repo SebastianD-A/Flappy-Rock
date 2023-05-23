@@ -49,7 +49,7 @@ class Rock(pygame.sprite.Sprite):
                 self.index=0
             self.image=self.images[self.index]
 rock_group=pygame.sprite.Group()
-rock=pygame.image.load('images/rock1.png')
+rock='images/rock1.png'
 rock_x=50
 rock_y=325
 rock_show=Rock(rock_x, rock_y)
