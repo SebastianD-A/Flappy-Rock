@@ -68,7 +68,7 @@ class Obstacle(pygame.sprite.Sprite):
         if waiting==False:
             self.rect.x-=4
             if self.rect.x<-40:
-                self.kill() 
+                self.kill() #kys <3
 obstacle_group=pygame.sprite.Group()
 obstacle_gap=200
 starting_position_obstacle_x=500
