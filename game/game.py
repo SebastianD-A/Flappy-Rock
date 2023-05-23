@@ -26,7 +26,6 @@ class Rock(pygame.sprite.Sprite):
         self.velocity = int(0)
         self.is_clicked= False
     def update(self):
-        #physics
         #gravity
         if waiting==False:
             self.velocity+=1.5
