@@ -53,7 +53,6 @@ rock_x=50
 rock_y=325
 rock_show=Rock(rock_x, rock_y)
 rock_group.add(rock_show)
-y_change=0
 #obstacles
 class Obstacle(pygame.sprite.Sprite):
     def __init__(self, x, y, position):
@@ -69,7 +68,7 @@ class Obstacle(pygame.sprite.Sprite):
         if waiting==False:
             self.rect.x-=4
             if self.rect.x<-40:
-                self.kill() #kys <3
+                self.kill() 
 obstacle_group=pygame.sprite.Group()
 obstacle_gap=200
 starting_position_obstacle_x=500
