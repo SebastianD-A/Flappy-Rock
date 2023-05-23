@@ -1,5 +1,6 @@
 import pygame
 import random
+import math
 pygame.init()
 #all game variables
 res=screen_x, screen_y= 500, 750
@@ -7,9 +8,8 @@ screen=pygame.display.set_mode(res)
 running=True
 fps=60
 waiting=True
-score=0
-pass_obstacle=False
 clock=pygame.time.Clock()
+#draw score
 #rock
 class Rock(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -75,7 +75,7 @@ class Obstacle(pygame.sprite.Sprite):
             if self.rect.x<-40:
                 self.kill() #kys <3
 obstacle_group=pygame.sprite.Group()
-obstacle_gap=250
+obstacle_gap=200
 starting_position_obstacle_x=500
 obstacle_frequency=1500 #miliseconds
 last_tick=pygame.time.get_ticks()-obstacle_frequency
@@ -84,13 +84,16 @@ bg= pygame.image.load('images/background.png')
 #when the game starts
 while running:
     clock.tick(fps)
-    pygame.display.set_caption("Flappy Dwayne 🗿")
+    pygame.display.set_caption("Flappy Rock")
     screen.blit(bg, (0,0))
     rock_group.draw(screen)
     rock_group.update()
     obstacle_group.draw(screen)
     obstacle_group.update()
     if pygame.sprite.groupcollide(rock_group, obstacle_group, False, False):
+        pygame.mixer.music.load('sound/rock_dead.mp3')
+        pygame.mixer.music.play()
+        pygame.time.delay(550)
         break
     rock_show=Rock(rock_x, rock_y)
     present_time=pygame.time.get_ticks()
