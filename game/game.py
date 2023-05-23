@@ -1,6 +1,5 @@
 import pygame
 import random
-import math
 pygame.init()
 #all game variables
 res=screen_x, screen_y= 500, 750
@@ -9,7 +8,6 @@ running=True
 fps=60
 waiting=True
 clock=pygame.time.Clock()
-#draw score
 #rock
 class Rock(pygame.sprite.Sprite):
     def __init__(self, x, y):
